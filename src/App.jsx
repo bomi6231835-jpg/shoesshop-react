@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createContext, useState } from 'react'
 import './App.css'
 import data from './db/data'
 import { Outlet, Route, Routes, useNavigate } from 'react-router-dom'
@@ -7,12 +7,18 @@ import Detail from './components/Detail'
 import Footer from './components/Footer'
 import About from './components/About'
 import Cart from './components/Cart'
+import { useSelector } from 'react-redux'
 
+export const Context1 = createContext()
 
 function App() {
   const [shoes, setShoes] = useState(data)
   console.log(shoes)
   const navigate = useNavigate()
+  const[remain, serRemain] = useState([10,11,12])
+  // const state = useSelector((state)=>{return state})
+  const user = useSelector(state=>state.user)
+  console.log(user)
 
   return (
     <div className="App">
@@ -32,7 +38,7 @@ function App() {
             <a onClick={()=>{navigate('/detail/0')}} className="text-gray-300 hover:text-white transition-colors font-medium cursor-pointer">
               Detail
             </a>
-            <a onClick={()=>{navigate('/cart')}} className="text-gray-300 hover:text-white transition-colors font-medium cursor-pointer">
+            <a onClick={()=>{navigate('/Cart')}} className="text-gray-300 hover:text-white transition-colors font-medium cursor-pointer">
               Cart
             </a>
           </div>
@@ -41,7 +47,10 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home shoes={shoes} setShoes={setShoes}/>}></Route>
-        <Route path='/detail/:id' element={<Detail shoes={shoes} />} />
+        <Route path='/detail/:id' element={
+          <Context1.Provider value={{remain, shoes}}>
+          <Detail shoes={shoes} />
+          </Context1.Provider> }/>
         <Route path='/about' element={<About />}>
           <Route path='member' element={<div>멤버입니다</div>} />
           <Route path='location' element={<div>위치입니다</div>} />

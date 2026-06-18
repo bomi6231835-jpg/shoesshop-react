@@ -1,6 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import TabContent from './TabContent'
+import styled from 'styled-components'
+
+const Box = styled.div`
+    padding 20px 0;
+    color : gray;
+`
+const YellowBtn = styled.button`
+    color : white;
+   font-size: 30px;
+   width: 100%;
+   padding : 190px 300px;
+   border: 1px solid #ccc;
+   background-image:url("https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+   background-size: cover;
+   background-position: center;
+`
 
 const Detail = (props) => {
     const { shoes } = props
@@ -23,7 +39,7 @@ const Detail = (props) => {
         const timer = setTimeout(() => {
             setFade(true)
         }, 10)
-        
+
         return () => {
             clearTimeout(timer)
         }
@@ -40,7 +56,10 @@ const Detail = (props) => {
                     2초이내 구매시 할인
                 </div>
             }
-
+            <Box>
+                <YellowBtn>지금 구매하면 10% 할인</YellowBtn>
+            </Box>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div className="w-full">
                     <img
@@ -104,7 +123,7 @@ const Detail = (props) => {
                 </li>
             </ul>
 
-            <TabContent tab={tab} />
+            <TabContent tab={tab}/>
         </div>
     )
 }
