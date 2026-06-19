@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TabContent from './TabContent'
 import styled from 'styled-components'
+// import { addItem } from '../state/cartSlice'
+// import { useDispatch } from 'react-redux'
+import { useCartStore } from '../state/cartStore'
 
 const Box = styled.div`
     padding 20px 0;
@@ -23,9 +26,13 @@ const Detail = (props) => {
     const { id } = useParams()
     const [tab, setTab] = useState(0);
     const [alert, setAlert] = useState(true)
+    const [fade, setFade] = useState(true)
+    // const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const addItem = useCartStore((state) => state.addItem);
 
     // 추가
-    const [fade, setFade] = useState(false)
     let selproduct = shoes.find(x => x.id == parseInt(id))
     useEffect(() => {
         const timer = setTimeout(() => { setAlert(false) }, 2000)
@@ -59,7 +66,7 @@ const Detail = (props) => {
             <Box>
                 <YellowBtn>지금 구매하면 10% 할인</YellowBtn>
             </Box>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div className="w-full">
                     <img
@@ -82,7 +89,12 @@ const Detail = (props) => {
                         {selproduct.price}원
                     </p>
 
-                    <button className="bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2.5 rounded-lg transition-colors shadow-md active:scale-95 transform">
+                    <button className="bg-red-600 hover:bg-red-700 text-white font-medium px-6 py-2.5 rounded-lg transition-colors shadow-md active:scale-95 transform" onClick={()=>{
+                        (addItem({id: selproduct.id, imgUrl: selproduct.imgUrl, item: selproduct.title, price: selproduct.price, amount: 1}))
+                        if(window.confirm('장바구니로 이동하시겠습니까?')){
+                            navigate('/cart')
+                        }
+                    }}>
                         주문하기
                     </button>
                 </div>
@@ -91,39 +103,36 @@ const Detail = (props) => {
             <ul className="flex border-b border-gray-200 list-none p-0 m-0">
                 <li
                     onClick={() => setTab(0)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${
-                        tab === 0
+                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${tab === 0
                             ? 'border-blue-600 text-blue-600 font-semibold'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                        }`}
                 >
                     버튼0
                 </li>
 
                 <li
                     onClick={() => setTab(1)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${
-                        tab === 1
+                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${tab === 1
                             ? 'border-blue-600 text-blue-600 font-semibold'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                        }`}
                 >
                     버튼1
                 </li>
 
                 <li
                     onClick={() => setTab(2)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${
-                        tab === 2
+                    className={`px-4 py-2 text-sm font-medium transition-colors duration-200 -mb-[1px] border-b-2 cursor-pointer select-none ${tab === 2
                             ? 'border-blue-600 text-blue-600 font-semibold'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                        }`}
                 >
                     버튼2
                 </li>
             </ul>
 
-            <TabContent tab={tab}/>
+            <TabContent tab={tab} />
         </div>
     )
 }
